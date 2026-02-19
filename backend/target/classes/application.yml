@@ -1,0 +1,22 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: mypay-backend
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/mypay
+      database: mypay
+
+  # CORS configuration
+  web:
+    cors:
+      allowed-origins: http://localhost:4200
+
+# JWT Configuration
+app:
+  jwt:
+    secret: MyPaySuperSecretKeyForJWTTokenGeneration2026SecureEnough256Bits!!
+    expiration-ms: 86400000  # 24 hours

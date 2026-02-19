@@ -1,0 +1,55 @@
+<div class="dashboard">
+  <nav class="dash-nav">
+    <div class="dash-brand">
+      <span class="logo">💳</span>
+      <span class="brand-name">MyPay</span>
+    </div>
+    <div class="dash-nav-right">
+      <span class="welcome" *ngIf="user">Bonjour, {{ user.firstName }} 👋</span>
+      <button class="btn btn-outline-sm" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dash-content">
+    <h1>Tableau de bord</h1>
+    <p class="dash-subtitle">Bienvenue sur votre espace MyPay. Vos contrats et paiements apparaîtront ici.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-info">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Contrats actifs</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Paiements effectués</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-info">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Échéances à venir</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <span class="stat-value">0 TND</span>
+          <span class="stat-label">Dépenses ce mois</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>Aucun contrat pour le moment</h3>
+      <p>Ajoutez votre premier contrat pour commencer à suivre vos paiements.</p>
+      <button class="btn btn-primary">+ Ajouter un contrat</button>
+    </div>
+  </div>
+</div>
