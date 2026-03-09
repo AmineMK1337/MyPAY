@@ -6,12 +6,16 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { AlerteLayoutComponent } from './pages/alerte/alerte-layout.component';
 import { PaymentHistoryComponent } from './pages/alerte/payment-history.component';
 import { MonthlyForecastComponent } from './pages/alerte/monthly-forecast.component';
+import { AddContractComponent } from './pages/add-contract/add-contract';
+import { PaymentComponent } from './pages/payment/payment';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'add-contract', component: AddContractComponent },
+  { path: 'payment', component: PaymentComponent },
   {
     path: 'alerte',
     component: AlerteLayoutComponent,

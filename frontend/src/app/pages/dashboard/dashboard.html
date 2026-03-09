@@ -13,43 +13,104 @@
   <div class="dash-content">
     <h1>Tableau de bord</h1>
     <p class="dash-subtitle">Bienvenue sur votre espace MyPay. Vos contrats et paiements apparaîtront ici.</p>
+    <div class="error-banner" *ngIf="loadError">
+      {{ loadError }}
+    </div>
 
+    <div class="stats-action">
+      <button class="btn btn-primary" routerLink="/add-contract">+ Ajouter un contrat</button>
+    </div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">📄</div>
         <div class="stat-info">
-          <span class="stat-value">0</span>
+          <span class="stat-value">{{ contractCount }}</span>
           <span class="stat-label">Contrats actifs</span>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">✅</div>
         <div class="stat-info">
-          <span class="stat-value">0</span>
+          <span class="stat-value">{{ paymentCount }}</span>
           <span class="stat-label">Paiements effectués</span>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">⏰</div>
         <div class="stat-info">
-          <span class="stat-value">0</span>
+          <span class="stat-value">{{ upcomingCount }}</span>
           <span class="stat-label">Échéances à venir</span>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">💰</div>
         <div class="stat-info">
-          <span class="stat-value">0 TND</span>
+          <span class="stat-value">{{ monthlyExpense | number: '1.2-2' }} TND</span>
           <span class="stat-label">Dépenses ce mois</span>
         </div>
       </div>
     </div>
 
-    <div class="empty-state">
+    <!-- Contracts List -->
+    <div *ngIf="contracts.length > 0" class="contracts-section">
+      <h2>Mes contrats</h2>
+      <div class="contracts-list">
+        <div *ngFor="let contract of contracts" class="contract-item" [ngClass]="getUrgencyClass(contract.dueDate)">
+          <div class="contract-header">
+            <h3>{{ contract.contractName }}</h3>
+            <div class="header-badges">
+              <span class="urgency-badge" [ngClass]="getUrgencyClass(contract.dueDate)">
+                {{ getUrgencyLabel(contract.dueDate) }}
+              </span>
+              <span class="contract-type">{{ contract.contractType }}</span>
+            </div>
+          </div>
+          <div class="contract-details">
+            <div class="detail-row">
+              <span class="label">Fournisseur:</span>
+              <span class="value">{{ contract.provider }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Montant:</span>
+              <span class="value">{{ contract.amount }} DT</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date d'échéance:</span>
+              <span class="value">{{ contract.dueDate }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Fréquence:</span>
+              <span class="value">{{ contract.frequency }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Statut:</span>
+              <span class="value status" [ngClass]="(contract.status || 'active').toLowerCase()">
+                {{ contract.status || 'ACTIVE' }}
+              </span>
+            </div>
+          </div>
+          <div class="contract-actions">
+            <button class="btn btn-payment" (click)="makePayment(contract)">
+              💳 Paiement
+            </button>
+            <button
+              class="btn btn-delete"
+              (click)="deleteContract(contract)"
+              [disabled]="deletingContractId === contract.id"
+            >
+              {{ deletingContractId === contract.id ? 'Suppression...' : 'Supprimer' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="contracts.length === 0" class="empty-state">
       <div class="empty-icon">📋</div>
       <h3>Aucun contrat pour le moment</h3>
       <p>Ajoutez votre premier contrat pour commencer à suivre vos paiements.</p>
-      <button class="btn btn-primary">+ Ajouter un contrat</button>
+      <button class="btn btn-primary" routerLink="/add-contract">+ Ajouter un contrat</button>
     </div>
   </div>
 </div>

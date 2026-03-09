@@ -5,6 +5,7 @@ $bg-dark: #0F172A;
 $bg-card: #1E293B;
 $text-white: #F8FAFC;
 $text-gray: #94A3B8;
+$border-color: rgba(255, 255, 255, 0.06);
 
 :host {
   display: block;
@@ -81,6 +82,22 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.error-banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fecaca;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.stats-action {
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -140,4 +157,233 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
   &:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba($primary, 0.4); }
+}
+
+.btn-payment {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  justify-content: center;
+  
+  &:hover { 
+    transform: translateY(-1px); 
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); 
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: rgba(239, 68, 68, 0.16);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.26);
+    color: #fee2e2;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary-sm {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  background: rgba($primary, 0.15);
+  color: $primary-light;
+  border: 1px solid rgba($primary, 0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: rgba($primary, 0.25); }
+}
+
+/* Contracts Section */
+.contracts-section {
+  margin-top: 2rem;
+  
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.contracts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+
+.contract-item {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.urgent {
+    border-color: rgba(239, 68, 68, 0.7);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+  }
+
+  &.near {
+    border-color: rgba(245, 158, 11, 0.7);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
+  }
+
+  &.safe {
+    border-color: rgba(16, 185, 129, 0.6);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.14);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba($primary, 0.5);
+    box-shadow: 0 8px 24px rgba($primary, 0.2);
+  }
+
+  .contract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.2rem;
+    background: rgba($primary, 0.05);
+    border-bottom: 1px solid $border-color;
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      color: $text-white;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .urgency-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.36rem 0.7rem;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+
+      &.urgent {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+      }
+
+      &.near {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+
+      &.safe {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+      }
+    }
+
+    .contract-type {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: $primary-light;
+      background: rgba($primary, 0.15);
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+  }
+
+  .contract-details {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem;
+      background: rgba($primary, 0.05);
+      border-radius: 6px;
+
+      .label {
+        font-size: 0.85rem;
+        color: $text-gray;
+        font-weight: 600;
+      }
+
+      .value {
+        font-size: 0.9rem;
+        color: $text-white;
+        font-weight: 500;
+
+        &.status {
+          padding: 0.3rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+
+          &.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+          }
+
+          &.completed {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+          }
+
+          &.cancelled {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+          }
+        }
+      }
+    }
+  }
+
+  .contract-actions {
+    padding: 1rem;
+    border-top: 1px solid $border-color;
+    display: flex;
+    gap: 0.8rem;
+  }
 }

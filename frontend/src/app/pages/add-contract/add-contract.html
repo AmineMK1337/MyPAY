@@ -1,0 +1,108 @@
+<div class="add-contract-page">
+  <!-- Header -->
+  <div class="contract-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-icon">←</span>
+    </button>
+    <h1>Ajouter un contrat</h1>
+  </div>
+
+  <div class="contract-container">
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="contract-form">
+      <!-- Section 1: Informations du contrat -->
+      <section class="form-section">
+        <div class="section-header">
+          <span class="section-icon">📄</span>
+          <h2>Informations du contrat</h2>
+        </div>
+        <div class="form-group">
+          <label for="type">Type de contrat</label>
+          <select id="type" [(ngModel)]="contractType" name="contractType" required [disabled]="loading">
+            <option value="">Choisir un type</option>
+            <option value="assurance">Assurance</option>
+            <option value="credit">Crédit</option>
+            <option value="leasing">Leasing</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="name">Nom du contrat</label>
+          <input type="text" id="name" [(ngModel)]="contractName" name="contractName" 
+                 placeholder="e.g., Assurance voiture" required [disabled]="loading" />
+        </div>
+        <div class="form-group">
+          <label for="provider">Organisme / Fournisseur</label>
+          <input type="text" id="provider" [(ngModel)]="provider" name="provider" 
+                 placeholder="e.g., STAR Assurance" required [disabled]="loading" />
+        </div>
+      </section>
+
+      <!-- Section 2: Informations de paiement -->
+      <section class="form-section">
+        <div class="section-header">
+          <span class="section-icon">💰</span>
+          <h2>Informations de paiement</h2>
+        </div>
+        <div class="form-group">
+          <label for="amount">Montant à payer</label>
+          <div class="input-with-unit">
+            <input type="number" id="amount" [(ngModel)]="amount" name="amount" 
+                   placeholder="300" required [disabled]="loading" />
+            <span class="unit">DT</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dueDate">Date d'échéance</label>
+          <input type="date" id="dueDate" [(ngModel)]="dueDate" name="dueDate" required [disabled]="loading" />
+        </div>
+        <div class="form-group">
+          <label for="frequency">Fréquence de paiement</label>
+          <select id="frequency" [(ngModel)]="frequency" name="frequency" required [disabled]="loading">
+            <option value="">Choisir une fréquence</option>
+            <option value="mensuel">Mensuel</option>
+            <option value="trimestriel">Trimestriel</option>
+            <option value="annuel">Annuel</option>
+            <option value="unique">Unique</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 3: Notifications -->
+      <section class="form-section">
+        <div class="section-header">
+          <span class="section-icon">🔔</span>
+          <h2>Notifications</h2>
+        </div>
+        <div class="notifications-box">
+          <label class="checkbox-item">
+            <span>Notification avant échéance</span>
+            <input type="checkbox" [(ngModel)]="notifyBefore" name="notifyBefore" [disabled]="loading" />
+          </label>
+          <label class="checkbox-item">
+            <span>Rappel 3 jours avant paiement</span>
+            <input type="checkbox" [(ngModel)]="remindDays" name="remindDays" [disabled]="loading" />
+          </label>
+          <label class="checkbox-item">
+            <span>Alerte en cas de retard</span>
+            <input type="checkbox" [(ngModel)]="alertDelay" name="alertDelay" [disabled]="loading" />
+          </label>
+        </div>
+      </section>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? '⏳ Création en cours...' : '✓ Ajouter le contrat' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
