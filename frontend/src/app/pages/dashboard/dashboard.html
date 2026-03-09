@@ -42,13 +42,13 @@
           <span class="stat-label">Échéances à venir</span>
         </div>
       </div>
-      <div class="stat-card">
+      <button class="stat-card stat-card-link" type="button" (click)="goToExpenses()">
         <div class="stat-icon">💰</div>
         <div class="stat-info">
           <span class="stat-value">{{ monthlyExpense | number: '1.2-2' }} TND</span>
           <span class="stat-label">Dépenses ce mois</span>
         </div>
-      </div>
+      </button>
     </div>
 
     <!-- Contracts List -->

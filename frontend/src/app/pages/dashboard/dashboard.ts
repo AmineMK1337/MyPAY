@@ -50,6 +50,10 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  goToExpenses(): void {
+    this.router.navigate(['/alerte']);
+  }
+
   loadContracts(): void {
     this.loadError = '';
     this.contractService.getContracts().subscribe(
