@@ -1,0 +1,91 @@
+<div class="page-body">
+  <div class="page-heading">
+    <h1>Payment History</h1>
+    <p>Detailed list of all your completed and pending payments.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Total Amount</span>
+        <span class="pill">💳</span>
+      </div>
+      <div class="stat-value">${{ stats.total.toFixed(2) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Paid</span>
+        <span class="pill">✅</span>
+      </div>
+      <div class="stat-value">{{ stats.paid }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Pending</span>
+        <span class="pill">⏳</span>
+      </div>
+      <div class="stat-value">{{ stats.pending }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Late</span>
+        <span class="pill">⚠️</span>
+      </div>
+      <div class="stat-value">{{ stats.late }}</div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Transaction List</h2>
+        <p>Monitor all your financial transactions</p>
+      </div>
+      <button type="button" class="btn">Export PDF</button>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">✅</div>
+        <div>
+          <p class="feature-title">Detailed Payment List</p>
+          <p class="feature-sub">Complete history of all transactions</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔔</div>
+        <div>
+          <p class="feature-title">Status Indicators</p>
+          <p class="feature-sub">Real-time payment status tracking</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⬇️</div>
+        <div>
+          <p class="feature-title">Export to PDF</p>
+          <p class="feature-sub">Download your payment records</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="row" *ngFor="let payment of payments">
+        <div class="row-left">
+          <div class="avatar">{{ categoryIcon(payment.category) }}</div>
+          <div class="row-text">
+            <p class="row-title">{{ payment.description }}</p>
+            <div class="row-meta">
+              <span>{{ payment.id }}</span>
+              <span>•</span>
+              <span>{{ payment.date | date: 'MMM d, y' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="amount">${{ payment.amount.toFixed(2) }}</div>
+          <span [class]="statusClass(payment.status)">{{ statusLabel(payment.status) }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
