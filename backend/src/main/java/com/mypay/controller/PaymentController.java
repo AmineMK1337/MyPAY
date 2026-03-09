@@ -7,6 +7,7 @@ import com.mypay.model.Payment;
 import com.mypay.repository.UserRepository;
 import com.mypay.security.JwtUtils;
 import com.mypay.service.PaymentService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${cors.allowed-origins:http://localhost:4200}")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -30,7 +31,7 @@ public class PaymentController {
     @PostMapping("/online")
     public ResponseEntity<ApiResponse> payOnline(
             @RequestHeader("Authorization") String token,
-            @RequestBody OnlinePaymentRequest request) {
+            @Valid @RequestBody OnlinePaymentRequest request) {
         try {
             String userId = getUserIdFromToken(token);
             OnlinePaymentResponse response = paymentService.processOnlinePayment(userId, request);

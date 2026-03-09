@@ -17,6 +17,7 @@ public class Contract {
     private String endDate;
     private String status; // ACTIVE, COMPLETED, CANCELLED
     private String description;
+    private String category; // insurance, subscription, card, bank, shopping
     private long createdAt;
     private long updatedAt;
     
@@ -115,6 +116,14 @@ public class Contract {
     
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
     }
     
     public long getCreatedAt() {

@@ -15,6 +15,8 @@ public class Payment {
     private double amount;
     private String status = "PENDING";
     private String paymentMethod;
+    private String description;
+    private String category;
     private LocalDateTime paymentDate;
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -67,6 +69,22 @@ public class Payment {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public LocalDateTime getPaymentDate() {

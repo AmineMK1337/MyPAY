@@ -6,6 +6,9 @@ import com.mypay.dto.ApiResponse;
 import com.mypay.service.ContractService;
 import com.mypay.security.JwtUtils;
 import com.mypay.repository.UserRepository;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/contracts")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${cors.allowed-origins:http://localhost:4200}")
 public class ContractController {
+
+    private static final Logger log = LoggerFactory.getLogger(ContractController.class);
 
     @Autowired
     private ContractService contractService;
@@ -36,17 +41,16 @@ public class ContractController {
     @PostMapping
     public ResponseEntity<ApiResponse> createContract(
             @RequestHeader("Authorization") String token,
-            @RequestBody CreateContractRequest request) {
+            @Valid @RequestBody CreateContractRequest request) {
 
         try {
             String userId = getUserIdFromToken(token);
-            System.out.println("✅ Creating contract for user: " + userId);
+            log.info("Creating contract for user: {}", userId);
             ContractResponse contract = contractService.createContract(userId, request);
-            System.out.println("✅ Contract created: " + contract.getId());
+            log.info("Contract created: {}", contract.getId());
             return ResponseEntity.ok(new ApiResponse(true, "Contract created successfully", contract));
         } catch (Exception e) {
-            System.err.println("❌ Error creating contract: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error creating contract: {}", e.getMessage());
             return ResponseEntity.status(500).body(new ApiResponse(false, "Error: " + e.getMessage()));
         }
     }
@@ -57,13 +61,12 @@ public class ContractController {
 
         try {
             String userId = getUserIdFromToken(token);
-            System.out.println("✅ Fetching contracts for user: " + userId);
+            log.info("Fetching contracts for user: {}", userId);
             List<ContractResponse> contracts = contractService.getContractsByUser(userId);
-            System.out.println("✅ Found " + contracts.size() + " contracts");
+            log.info("Found {} contracts", contracts.size());
             return ResponseEntity.ok(new ApiResponse(true, "Contracts retrieved successfully", contracts));
         } catch (Exception e) {
-            System.err.println("❌ Error fetching contracts: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error fetching contracts: {}", e.getMessage());
             return ResponseEntity.status(500).body(new ApiResponse(false, "Error: " + e.getMessage()));
         }
     }
@@ -72,9 +75,14 @@ public class ContractController {
     public ResponseEntity<ApiResponse> getActiveContracts(
             @RequestHeader("Authorization") String token) {
 
-        String userId = getUserIdFromToken(token);
-        List<ContractResponse> contracts = contractService.getActiveContractsByUser(userId);
-        return ResponseEntity.ok(new ApiResponse(true, "Active contracts retrieved successfully", contracts));
+        try {
+            String userId = getUserIdFromToken(token);
+            List<ContractResponse> contracts = contractService.getActiveContractsByUser(userId);
+            return ResponseEntity.ok(new ApiResponse(true, "Active contracts retrieved successfully", contracts));
+        } catch (Exception e) {
+            log.error("Error fetching active contracts: {}", e.getMessage());
+            return ResponseEntity.status(500).body(new ApiResponse(false, "Error: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
@@ -82,18 +90,30 @@ public class ContractController {
             @PathVariable String id,
             @RequestHeader("Authorization") String token) {
 
-        ContractResponse contract = contractService.getContract(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Contract retrieved successfully", contract));
+        try {
+            String userId = getUserIdFromToken(token);
+            ContractResponse contract = contractService.getContractForUser(id, userId);
+            return ResponseEntity.ok(new ApiResponse(true, "Contract retrieved successfully", contract));
+        } catch (Exception e) {
+            log.error("Error fetching contract: {}", e.getMessage());
+            return ResponseEntity.status(403).body(new ApiResponse(false, e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateContract(
             @PathVariable String id,
             @RequestHeader("Authorization") String token,
-            @RequestBody CreateContractRequest request) {
+            @Valid @RequestBody CreateContractRequest request) {
 
-        ContractResponse contract = contractService.updateContract(id, request);
-        return ResponseEntity.ok(new ApiResponse(true, "Contract updated successfully", contract));
+        try {
+            String userId = getUserIdFromToken(token);
+            ContractResponse contract = contractService.updateContractForUser(id, userId, request);
+            return ResponseEntity.ok(new ApiResponse(true, "Contract updated successfully", contract));
+        } catch (Exception e) {
+            log.error("Error updating contract: {}", e.getMessage());
+            return ResponseEntity.status(403).body(new ApiResponse(false, e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -101,7 +121,13 @@ public class ContractController {
             @PathVariable String id,
             @RequestHeader("Authorization") String token) {
 
-        contractService.deleteContract(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Contract deleted successfully"));
+        try {
+            String userId = getUserIdFromToken(token);
+            contractService.deleteContractForUser(id, userId);
+            return ResponseEntity.ok(new ApiResponse(true, "Contract deleted successfully"));
+        } catch (Exception e) {
+            log.error("Error deleting contract: {}", e.getMessage());
+            return ResponseEntity.status(403).body(new ApiResponse(false, e.getMessage()));
+        }
     }
 }

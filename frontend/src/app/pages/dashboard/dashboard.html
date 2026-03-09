@@ -4,6 +4,11 @@
       <span class="logo">💳</span>
       <span class="brand-name">MyPay</span>
     </div>
+    <div class="dash-nav-center">
+      <a routerLink="/dashboard" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">📊 Tableau de bord</a>
+      <a routerLink="/alerte" class="nav-link" routerLinkActive="active">📜 Historique</a>
+      <a routerLink="/alerte/forecast" class="nav-link" routerLinkActive="active">📈 Prévisions</a>
+    </div>
     <div class="dash-nav-right">
       <span class="welcome" *ngIf="user">Bonjour, {{ user.firstName }} 👋</span>
       <button class="btn btn-outline-sm" (click)="logout()">Déconnexion</button>

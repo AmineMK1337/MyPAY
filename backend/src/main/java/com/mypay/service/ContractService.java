@@ -27,6 +27,7 @@ public class ContractService {
         contract.setDueDate(request.getDueDate());
         contract.setStartDate(java.time.LocalDate.now().toString());
         contract.setStatus("ACTIVE");
+        contract.setCategory(determineCategoryFromType(request.getContractType()));
         contract.setCreatedAt(System.currentTimeMillis());
         contract.setUpdatedAt(System.currentTimeMillis());
 
@@ -75,6 +76,45 @@ public class ContractService {
         contractRepository.deleteById(contractId);
     }
 
+    // Secure methods with ownership verification
+    public ContractResponse getContractForUser(String contractId, String userId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new RuntimeException("Contract not found"));
+        if (!contract.getUserId().equals(userId)) {
+            throw new RuntimeException("Access denied: Contract does not belong to user");
+        }
+        return convertToResponse(contract);
+    }
+
+    public ContractResponse updateContractForUser(String contractId, String userId, CreateContractRequest request) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new RuntimeException("Contract not found"));
+        if (!contract.getUserId().equals(userId)) {
+            throw new RuntimeException("Access denied: Contract does not belong to user");
+        }
+
+        contract.setType(request.getContractType());
+        contract.setDescription(request.getContractName());
+        contract.setProvider(request.getProvider());
+        contract.setMonthlyPayment(request.getAmount());
+        contract.setDueDate(request.getDueDate());
+        contract.setCategory(determineCategoryFromType(request.getContractType()));
+        contract.setUpdatedAt(System.currentTimeMillis());
+
+        contract = contractRepository.save(contract);
+
+        return convertToResponse(contract, request);
+    }
+
+    public void deleteContractForUser(String contractId, String userId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new RuntimeException("Contract not found"));
+        if (!contract.getUserId().equals(userId)) {
+            throw new RuntimeException("Access denied: Contract does not belong to user");
+        }
+        contractRepository.deleteById(contractId);
+    }
+
     private ContractResponse convertToResponse(Contract contract) {
         return new ContractResponse(
                 contract.getId(),
@@ -111,5 +151,22 @@ public class ContractService {
                 contract.getStatus(),
                 contract.getCreatedAt(),
                 notifications);
+    }
+
+    private String determineCategoryFromType(String type) {
+        if (type == null) {
+            return "subscription";
+        }
+        
+        String typeLower = type.toLowerCase();
+        if (typeLower.contains("insurance")) {
+            return "insurance";
+        } else if (typeLower.contains("loan") || typeLower.contains("credit")) {
+            return "card";
+        } else if (typeLower.contains("leasing")) {
+            return "card";
+        }
+        
+        return "subscription";
     }
 }

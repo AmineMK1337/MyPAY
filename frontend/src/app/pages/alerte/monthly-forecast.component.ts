@@ -1,13 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-interface ExpenseCategory {
-  name: string;
-  amount: number;
-  color: string;
-  percentage: number;
-  icon: string;
-}
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { AnalyticsService, ExpenseCategory, MonthlyTrend } from '../../services/analytics';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-monthly-forecast',
@@ -16,32 +12,64 @@ interface ExpenseCategory {
   templateUrl: './monthly-forecast.component.html',
   styleUrl: './monthly-forecast.component.scss'
 })
-export class MonthlyForecastComponent {
-  expenseData: ExpenseCategory[] = [
-    { name: 'Insurance', amount: 450, color: '#00d4ff', percentage: 22, icon: '🛡️' },
-    { name: 'Credit Cards', amount: 680, color: '#a78bfa', percentage: 33, icon: '💳' },
-    { name: 'Subscriptions', amount: 245, color: '#10b981', percentage: 12, icon: '📡' },
-    { name: 'Rent/Mortgage', amount: 580, color: '#f59e0b', percentage: 28, icon: '🏠' },
-    { name: 'Transportation', amount: 95, color: '#ef4444', percentage: 5, icon: '🚗' }
-  ];
+export class MonthlyForecastComponent implements OnInit {
+  expenseData: ExpenseCategory[] = [];
+  monthlyTrend: MonthlyTrend[] = [];
+  projectedExpenses = 0;
+  budgetLimit = 0;
+  loading = true;
+  errorMessage = '';
 
-  monthlyTrend = [
-    { month: 'Jan', amount: 1850 },
-    { month: 'Feb', amount: 1920 },
-    { month: 'Mar', amount: 2050 },
-    { month: 'Apr', amount: 2050 },
-    { month: 'May', amount: 2050 },
-    { month: 'Jun', amount: 2050 }
-  ];
+  constructor(
+    private analyticsService: AnalyticsService,
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  projectedExpenses = 2050;
-  budgetLimit = 2500;
+  ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.loadMonthlyForecast();
+
+    // Reload data when navigating back to this page
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects.includes('/alerte/forecast')))
+      .subscribe(() => {
+        this.loadMonthlyForecast();
+      });
+  }
+
+  loadMonthlyForecast(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.analyticsService.getMonthlyForecast().subscribe({
+      next: (response) => {
+        console.log('Monthly forecast response:', response);
+        if (response.success && response.data) {
+          this.expenseData = [...response.data.expenseData];
+          this.monthlyTrend = [...response.data.monthlyTrend];
+          this.projectedExpenses = response.data.projectedExpenses;
+          this.budgetLimit = response.data.budgetLimit;
+          this.cdr.detectChanges();
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading monthly forecast:', err);
+        this.errorMessage = 'Impossible de charger les prévisions mensuelles';
+        this.loading = false;
+      }
+    });
+  }
 
   get totalExpenses(): number {
     return this.expenseData.reduce((sum, item) => sum + item.amount, 0);
   }
 
   get budgetUtilization(): number {
-    return (this.projectedExpenses / this.budgetLimit) * 100;
+    return this.budgetLimit > 0 ? (this.projectedExpenses / this.budgetLimit) * 100 : 0;
   }
 }

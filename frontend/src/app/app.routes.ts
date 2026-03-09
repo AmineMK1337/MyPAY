@@ -8,17 +8,19 @@ import { PaymentComponent } from './pages/payment/payment';
 import { AlerteLayoutComponent } from './pages/alerte/alerte-layout.component';
 import { PaymentHistoryComponent } from './pages/alerte/payment-history.component';
 import { MonthlyForecastComponent } from './pages/alerte/monthly-forecast.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'add-contract', component: AddContractComponent },
-  { path: 'payment', component: PaymentComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'add-contract', component: AddContractComponent, canActivate: [authGuard] },
+  { path: 'payment', component: PaymentComponent, canActivate: [authGuard] },
   {
     path: 'alerte',
     component: AlerteLayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', component: PaymentHistoryComponent },
       { path: 'forecast', component: MonthlyForecastComponent }

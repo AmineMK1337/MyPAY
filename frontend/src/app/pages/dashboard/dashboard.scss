@@ -40,6 +40,32 @@ $border-color: rgba(255, 255, 255, 0.06);
   }
 }
 
+.dash-nav-center {
+  display: flex;
+  gap: 1rem;
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: $text-gray;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $text-white;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+      color: $text-white;
+      background: rgba($primary, 0.2);
+      border: 1px solid rgba($primary, 0.3);
+    }
+  }
+}
+
 .dash-nav-right {
   display: flex;
   align-items: center;

@@ -1,14 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-interface Payment {
-  id: string;
-  description: string;
-  amount: number;
-  date: string;
-  status: 'paid' | 'pending' | 'late';
-  category: 'card' | 'bank' | 'shopping' | 'subscription';
-}
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { AnalyticsService, PaymentHistoryItem } from '../../services/analytics';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-payment-history',
@@ -17,17 +12,52 @@ interface Payment {
   templateUrl: './payment-history.component.html',
   styleUrl: './payment-history.component.scss'
 })
-export class PaymentHistoryComponent {
-  payments: Payment[] = [
-    { id: 'PAY-001', description: 'Monthly Subscription - Premium Plan', amount: 49.99, date: '2026-03-08', status: 'paid', category: 'subscription' },
-    { id: 'PAY-002', description: 'Transfer to Business Account', amount: 1250, date: '2026-03-07', status: 'paid', category: 'bank' },
-    { id: 'PAY-003', description: 'Credit Card Payment', amount: 856.5, date: '2026-03-06', status: 'pending', category: 'card' },
-    { id: 'PAY-004', description: 'Online Shopping - Electronics', amount: 324.99, date: '2026-03-05', status: 'paid', category: 'shopping' },
-    { id: 'PAY-005', description: 'Insurance Premium', amount: 180, date: '2026-03-03', status: 'late', category: 'subscription' },
-    { id: 'PAY-006', description: 'Utility Bill Payment', amount: 95.5, date: '2026-03-02', status: 'paid', category: 'bank' },
-    { id: 'PAY-007', description: 'Mobile Phone Bill', amount: 65, date: '2026-03-01', status: 'paid', category: 'subscription' },
-    { id: 'PAY-008', description: 'Merchant Payment', amount: 234.75, date: '2026-02-28', status: 'pending', category: 'shopping' }
-  ];
+export class PaymentHistoryComponent implements OnInit {
+  payments: PaymentHistoryItem[] = [];
+  loading = true;
+  errorMessage = '';
+
+  constructor(
+    private analyticsService: AnalyticsService,
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.loadPaymentHistory();
+
+    // Reload data when navigating back to this page
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === '/alerte'))
+      .subscribe(() => {
+        this.loadPaymentHistory();
+      });
+  }
+
+  loadPaymentHistory(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.analyticsService.getPaymentHistory().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.payments = [...response.data];
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading payment history:', err);
+        this.errorMessage = 'Impossible de charger l\'historique des paiements';
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   get stats() {
     return {
@@ -38,13 +68,13 @@ export class PaymentHistoryComponent {
     };
   }
 
-  statusLabel(status: Payment['status']): string {
-    if (status === 'paid') return 'Paid';
-    if (status === 'pending') return 'Pending';
-    return 'Late';
+  statusLabel(status: PaymentHistoryItem['status']): string {
+    if (status === 'paid') return 'Payé';
+    if (status === 'pending') return 'En attente';
+    return 'En retard';
   }
 
-  statusClass(status: Payment['status']): string {
+  statusClass(status: PaymentHistoryItem['status']): string {
     return {
       paid: 'badge badge-paid',
       pending: 'badge badge-pending',
@@ -52,12 +82,13 @@ export class PaymentHistoryComponent {
     }[status];
   }
 
-  categoryIcon(category: Payment['category']): string {
+  categoryIcon(category: PaymentHistoryItem['category']): string {
     return {
       card: '💳',
       bank: '🏦',
       shopping: '🛍️',
-      subscription: '📱'
+      subscription: '📱',
+      insurance: '🛡️'
     }[category];
   }
 }
