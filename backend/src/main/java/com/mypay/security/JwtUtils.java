@@ -51,4 +51,8 @@ public class JwtUtils {
             return false;
         }
     }
+
+    public String getUserIdFromToken(String token) {
+        return getEmailFromToken(token);
+    }
 }

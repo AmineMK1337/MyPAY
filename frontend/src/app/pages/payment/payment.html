@@ -1,0 +1,166 @@
+<div class="payment-page">
+  <nav class="pay-nav">
+    <div class="pay-brand">
+      <span class="brand-name">MyPay</span>
+    </div>
+    <a routerLink="/dashboard" class="btn-back">Retour a la page contrats</a>
+  </nav>
+
+  <main class="pay-content">
+    <section class="summary-card">
+      <p class="summary-label">Paiement en ligne</p>
+      <h1>{{ selectedContract?.title || 'Paiement du contrat' }}</h1>
+      <p class="summary-amount">{{ form.amount | number: '1.2-2' }} TND</p>
+      <p class="summary-meta" *ngIf="selectedContract">
+        Contrat selectionne depuis la page contrats - echeance {{ selectedContract.dueDate }}
+      </p>
+      <p class="summary-meta" *ngIf="!selectedContract">Transaction securisee via MyPay</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="section-head">
+          <h2>Prochains paiements</h2>
+          <button type="button" *ngIf="!selectedContract" (click)="loadUpcomingPayments()">Actualiser</button>
+        </div>
+
+        <div class="selected-contract" *ngIf="selectedContract">
+          <article class="upcoming-item selected">
+            <div class="item-left">
+              <span class="icon-badge">NOW</span>
+              <div>
+                <h3>{{ selectedContract.title }}</h3>
+                <p>Echeance: {{ selectedContract.dueDate }}</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <strong>-{{ selectedContract.amount | number: '1.2-2' }} TND</strong>
+              <span>{{ selectedContract.mode }}</span>
+            </div>
+          </article>
+          <p class="hint">Ce contrat a ete choisi depuis votre page contrats.</p>
+        </div>
+
+        <p class="hint" *ngIf="loadingUpcoming">Chargement des paiements...</p>
+
+        <div class="upcoming-list" *ngIf="!selectedContract && !loadingUpcoming && upcomingPayments.length > 0">
+          <article class="upcoming-item" *ngFor="let item of upcomingPayments" (click)="selectUpcomingPayment(item)">
+            <div class="item-left">
+              <span class="icon-badge">PAY</span>
+              <div>
+                <h3>{{ item.title }}</h3>
+                <p>Prevu le {{ item.dueDate }}</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <strong>-{{ item.amount | number: '1.2-2' }} TND</strong>
+              <span>{{ item.mode }}</span>
+            </div>
+          </article>
+        </div>
+
+        <p class="hint" *ngIf="!selectedContract && !loadingUpcoming && upcomingPayments.length === 0">
+          Aucun paiement a venir.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Payer par carte</h2>
+        <form class="pay-form" #paymentForm="ngForm" (ngSubmit)="submitPayment()">
+          <label>
+            E-mail
+            <input type="email" placeholder="votre@email.com" [(ngModel)]="form.email" name="email" required />
+          </label>
+
+          <label>
+            Montant (TND)
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              [(ngModel)]="form.amount"
+              name="amount"
+              [readonly]="!!selectedContract"
+              required
+            />
+          </label>
+
+          <label>
+            Numero de carte
+            <input
+              type="text"
+              placeholder="0000 0000 0000 0000"
+              [(ngModel)]="form.cardNumber"
+              name="cardNumber"
+              [pattern]="cardNumberPattern"
+              #cardNumberCtrl="ngModel"
+              (ngModelChange)="formatCardNumber()"
+              required
+            />
+            <span class="field-error" *ngIf="cardNumberCtrl.invalid && (cardNumberCtrl.dirty || cardNumberCtrl.touched)">
+              Numero invalide (12 a 19 chiffres)
+            </span>
+          </label>
+
+          <div class="split">
+            <label>
+              Expiration
+              <input
+                type="text"
+                placeholder="MM/AA"
+                [(ngModel)]="form.expiry"
+                name="expiry"
+                [pattern]="expiryPattern"
+                #expiryCtrl="ngModel"
+                (ngModelChange)="formatExpiry()"
+                required
+              />
+              <span class="field-error" *ngIf="expiryCtrl.invalid && (expiryCtrl.dirty || expiryCtrl.touched)">
+                Format attendu: MM/AA
+              </span>
+            </label>
+            <label>
+              CVC
+              <input
+                type="text"
+                placeholder="123"
+                [(ngModel)]="form.cvc"
+                name="cvc"
+                [pattern]="cvcPattern"
+                #cvcCtrl="ngModel"
+                (ngModelChange)="formatCvc()"
+                required
+              />
+              <span class="field-error" *ngIf="cvcCtrl.invalid && (cvcCtrl.dirty || cvcCtrl.touched)">
+                CVC invalide (3 ou 4 chiffres)
+              </span>
+            </label>
+          </div>
+
+          <label>
+            Nom sur la carte
+            <input
+              type="text"
+              placeholder="Jean Dupont"
+              [(ngModel)]="form.cardholderName"
+              name="cardholderName"
+              required
+            />
+          </label>
+
+          <button class="btn-pay" type="submit" [disabled]="paymentForm.invalid || submitting">
+            {{ submitting ? 'Traitement...' : ('Payer ' + (form.amount | number: '1.2-2') + ' TND') }}
+          </button>
+
+          <p class="message success" *ngIf="successMessage">{{ successMessage }}</p>
+          <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+          <p class="legal">
+            En payant, vous acceptez les conditions generales de vente de MyPay.
+            Vos donnees sont chiffrees et protegees.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>

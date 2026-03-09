@@ -1,0 +1,336 @@
+$primary: #4F46E5;
+$primary-light: #818CF8;
+$accent: #06B6D4;
+$bg-dark: #0F172A;
+$bg-card: #1E293B;
+$text-white: #F8FAFC;
+$text-gray: #94A3B8;
+$border-color: rgba(255, 255, 255, 0.06);
+$input-bg: #1E293B;
+
+:host {
+  display: block;
+  background: $bg-dark;
+  color: $text-white;
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.add-contract-page {
+  background: $bg-dark;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+/* Header */
+.contract-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba($bg-card, 0.5);
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: $text-white;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($primary, 0.15);
+    color: $primary-light;
+  }
+}
+
+.back-icon {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contract-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  color: #fca5a5;
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Form */
+.contract-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Form Section */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: $bg-card;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  .section-icon {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+}
+
+/* Form Group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input,
+  select {
+    height: 2.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: $input-bg;
+    border: 1.5px solid rgba($primary, 0.2);
+    color: $text-white;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: rgba($text-white, 0.4);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-light;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
+      background: rgba($primary, 0.05);
+    }
+
+    &:disabled {
+      color: $text-gray;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23818CF8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.2em 1.2em;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Input with unit */
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+  }
+
+  .unit {
+    position: absolute;
+    right: 1rem;
+    font-weight: 700;
+    color: $primary;
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+}
+
+/* Notifications Box */
+.notifications-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: rgba($primary, 0.05);
+  border: 1px solid rgba($primary, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba($primary, 0.1);
+  user-select: none;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba($primary, 0.1);
+  }
+
+  span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $text-gray;
+  }
+
+  input[type='checkbox'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: $primary;
+    border: 1.5px solid $primary;
+    border-radius: 4px;
+
+    &:checked {
+      background: $primary;
+    }
+  }
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+
+.btn {
+  height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $primary, $primary-light);
+  color: white;
+  box-shadow: 0 4px 15px rgba($primary, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($primary, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.btn-secondary {
+  background: $bg-card;
+  color: $text-gray;
+  border: 1px solid $border-color;
+
+  &:hover {
+    background: rgba($primary, 0.1);
+    color: $text-white;
+    border-color: rgba($primary, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .contract-container {
+    padding: 1rem;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .contract-header {
+    padding: 1rem;
+
+    h1 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .form-group {
+    input,
+    select {
+      height: 2.5rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .btn {
+    height: 2.75rem;
+    font-size: 0.9rem;
+  }
+}
