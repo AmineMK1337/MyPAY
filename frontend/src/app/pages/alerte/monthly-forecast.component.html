@@ -1,0 +1,119 @@
+<div class="page-body">
+  <div class="page-heading">
+    <h1>Monthly Expense Forecast</h1>
+    <p>Plan and control your monthly budget with intelligent insights.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Projected Expenses</span>
+        <span class="pill">📈</span>
+      </div>
+      <div class="stat-value">${{ projectedExpenses.toFixed(2) }}</div>
+      <p class="stat-sub">For this month</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Budget Limit</span>
+        <span class="pill">💰</span>
+      </div>
+      <div class="stat-value">${{ budgetLimit.toFixed(2) }}</div>
+      <p class="stat-sub">Monthly budget</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>Remaining</span>
+        <span class="pill">💡</span>
+      </div>
+      <div class="stat-value">${{ (budgetLimit - projectedExpenses).toFixed(2) }}</div>
+      <p class="stat-sub">{{ (100 - budgetUtilization) | number: '1.0-0' }}% of budget left</p>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Expense Analysis</h2>
+        <p>Understand where your money goes</p>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">📅</div>
+        <div>
+          <p class="feature-title">Upcoming Expenses</p>
+          <p class="feature-sub">Estimated financial obligations</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🧭</div>
+        <div>
+          <p class="feature-title">Category Distribution</p>
+          <p class="feature-sub">Breakdown by expense type</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛠️</div>
+        <div>
+          <p class="feature-title">Budget Planning</p>
+          <p class="feature-sub">Tools to control spending</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="card">
+        <h3>Expense Distribution</h3>
+        <div class="legend">
+          <div class="legend-item" *ngFor="let category of expenseData">
+            <span class="dot" [style.background]="category.color"></span>
+            <span class="label">{{ category.name }}</span>
+            <span class="value">${{ category.amount.toFixed(2) }}</span>
+            <span class="percent">{{ category.percentage }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Category Breakdown</h3>
+        <div class="category-list">
+          <div class="category" *ngFor="let category of expenseData">
+            <div class="category-left">
+              <div class="category-icon" [style.background]="category.color + '20'" [style.color]="category.color">
+                {{ category.icon }}
+              </div>
+              <div>
+                <div class="category-name">{{ category.name }}</div>
+                <div class="category-sub">{{ category.percentage }}% of total</div>
+              </div>
+            </div>
+            <div class="category-bar">
+              <div class="category-fill" [style.width.%]="category.percentage" [style.background]="category.color"></div>
+            </div>
+            <div class="category-amount">${{ (projectedExpenses * (category.percentage / 100)).toFixed(2) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>6-Month Expense Trend</h2>
+        <p>Track your spending patterns over time</p>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="trend-row" *ngFor="let item of monthlyTrend">
+        <span class="month">{{ item.month }}</span>
+        <div class="trend-bar">
+          <div class="trend-fill" [style.width.%]="(item.amount / budgetLimit) * 100"></div>
+        </div>
+        <span class="amount">${{ item.amount.toFixed(0) }}</span>
+      </div>
+    </div>
+  </section>
+</div>
