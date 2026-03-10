@@ -1,10 +1,24 @@
 package com.mypay.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class SignupRequest {
+    @NotBlank(message = "Le prénom est requis")
     private String firstName;
+    
+    @NotBlank(message = "Le nom est requis")
     private String lastName;
+    
+    @NotBlank(message = "L'email est requis")
+    @Email(message = "Format d'email invalide")
     private String email;
+    
     private String phone;
+    
+    @NotBlank(message = "Le mot de passe est requis")
+    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String password;
     
     public SignupRequest() {}

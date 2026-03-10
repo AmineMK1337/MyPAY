@@ -1,12 +1,27 @@
 package com.mypay.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 public class CreateContractRequest {
+    @NotBlank(message = "Le type de contrat est requis")
     private String contractType;
+    
+    @NotBlank(message = "Le nom du contrat est requis")
     private String contractName;
+    
+    @NotBlank(message = "Le fournisseur est requis")
     private String provider;
+    
+    @Positive(message = "Le montant doit être positif")
     private double amount;
+    
+    @NotBlank(message = "La date d'échéance est requise")
     private String dueDate;
+    
+    @NotBlank(message = "La fréquence est requise")
     private String frequency;
+    
     private NotificationSettings notifications;
 
     public static class NotificationSettings {

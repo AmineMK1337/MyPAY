@@ -7,6 +7,7 @@ import com.mypay.model.Payment;
 import com.mypay.repository.ContractRepository;
 import com.mypay.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +23,12 @@ public class PaymentService {
         this.contractRepository = contractRepository;
     }
 
+    @Transactional
     public OnlinePaymentResponse processOnlinePayment(String userId, OnlinePaymentRequest request) {
         validateRequest(request);
+
+        String description = "Paiement";
+        String category = "bank";
 
         if (request.getContractId() != null && !request.getContractId().isBlank()) {
             Contract contract = contractRepository.findById(request.getContractId())
@@ -32,6 +37,10 @@ public class PaymentService {
             if (!userId.equals(contract.getUserId())) {
                 throw new RuntimeException("Unauthorized contract access");
             }
+
+            // Store contract details in payment before contract is deleted
+            description = contract.getDescription() != null ? contract.getDescription() : "Paiement de contrat";
+            category = determineCategory(contract);
         }
 
         Payment payment = new Payment();
@@ -40,6 +49,8 @@ public class PaymentService {
         payment.setAmount(request.getAmount());
         payment.setPaymentMethod("CARD");
         payment.setStatus("SUCCESS");
+        payment.setDescription(description);
+        payment.setCategory(category);
         payment.setPaymentDate(LocalDateTime.now());
 
         payment = paymentRepository.save(payment);
@@ -76,5 +87,22 @@ public class PaymentService {
         String digits = rawCardNumber.replaceAll("\\D", "");
         String last4 = digits.length() >= 4 ? digits.substring(digits.length() - 4) : "0000";
         return "**** **** **** " + last4;
+    }
+
+    private String determineCategory(Contract contract) {
+        if (contract.getCategory() != null && !contract.getCategory().isEmpty()) {
+            return contract.getCategory().toLowerCase();
+        }
+
+        String type = contract.getType() != null ? contract.getType().toLowerCase() : "";
+        if (type.contains("insurance")) {
+            return "insurance";
+        } else if (type.contains("loan")) {
+            return "card";
+        } else if (type.contains("leasing")) {
+            return "card";
+        }
+
+        return "subscription";
     }
 }

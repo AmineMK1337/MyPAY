@@ -1,0 +1,32 @@
+<div class="page">
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">MP</div>
+      <div>
+        <div class="brand-title">MyPay</div>
+        <div class="brand-sub">Tableau de bord Fintech</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a routerLink="/dashboard" class="nav-link">
+        <span class="icon" aria-hidden="true">🏠</span>
+        <span>Tableau de bord</span>
+      </a>
+      <a routerLink="." routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+        <span class="icon" aria-hidden="true">⌛</span>
+        <span>Historique des paiements</span>
+      </a>
+      <a routerLink="forecast" routerLinkActive="active" class="nav-link">
+        <span class="icon" aria-hidden="true">📈</span>
+        <span>Prévisions mensuelles</span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+</div>

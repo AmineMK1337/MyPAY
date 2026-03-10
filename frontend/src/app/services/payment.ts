@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AuthService } from './auth';
 import { ContractService } from './contract';
+import { environment } from '../../environments/environment';
 
 export interface UpcomingPayment {
   contractId: string;
@@ -50,7 +51,7 @@ interface ApiResponse<T> {
   providedIn: 'root',
 })
 export class PaymentService {
-  private paymentApiUrl = 'http://localhost:8088/api/payments';
+  private paymentApiUrl = `${environment.apiUrl}/payments`;
 
   constructor(
     private contractService: ContractService,

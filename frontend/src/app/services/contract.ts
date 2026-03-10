@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
+import { environment } from '../../environments/environment';
 
 export interface CreateContractRequest {
   contractType: string;
@@ -44,7 +45,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class ContractService {
-  private apiUrl = 'http://localhost:8088/api/contracts';
+  private apiUrl = `${environment.apiUrl}/contracts`;
 
   constructor(
     private http: HttpClient,
