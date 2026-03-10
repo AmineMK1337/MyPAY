@@ -1,5 +1,7 @@
 # MyPay
 
+MyPay is a full-stack payment management app where users can create contracts, track payment status, and view payment analytics in a dashboard.
+
 This README contains only the essentials: how to run the project and how to configure MongoDB.
 
 ## 1) Run Commands
@@ -48,6 +50,10 @@ npx ng serve --open
 - Frontend: `http://localhost:4200`
 - Backend: `http://localhost:8088`
 - Health check: `http://localhost:8088/api/auth/health`
+
+## Test Account
+- Email: `demo@gmail.com`
+- Password: `demo123`
 
 ## 2) Database Configuration (MongoDB)
 
