@@ -41,7 +41,10 @@
         <h2>Liste des transactions</h2>
         <p>Surveillez toutes vos transactions financières</p>
       </div>
-      <button type="button" class="btn">Exporter PDF</button>
+      <button type="button" class="btn btn-export" (click)="exportPdf()" [disabled]="exporting || payments.length === 0">
+        <span *ngIf="!exporting">⬇️ Exporter PDF</span>
+        <span *ngIf="exporting">⏳ Génération...</span>
+      </button>
     </div>
 
     <div class="feature-grid">

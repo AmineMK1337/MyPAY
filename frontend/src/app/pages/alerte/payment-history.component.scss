@@ -100,9 +100,15 @@
   transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 15px 35px rgba(0, 212, 255, 0.25);
+}
+
+.btn-export:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .feature-grid {

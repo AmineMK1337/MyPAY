@@ -22,14 +22,31 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
+    console.log('📤 Tentative de connexion pour:', this.email);
+
     this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
+        console.log('✅ Connexion réussie:', response);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Email ou mot de passe incorrect';
+        console.error('❌ Erreur de connexion:', err);
+        console.error('Détails de l\'erreur:', {
+          status: err.status,
+          statusText: err.statusText,
+          error: err.error,
+          message: err.message
+        });
+        
+        if (err.status === 0) {
+          this.errorMessage = 'Impossible de se connecter au serveur. Vérifiez que le backend est démarré.';
+        } else if (err.status === 401 || err.status === 403) {
+          this.errorMessage = 'Email ou mot de passe incorrect';
+        } else {
+          this.errorMessage = err.error?.message || err.message || 'Email ou mot de passe incorrect';
+        }
       }
     });
   }

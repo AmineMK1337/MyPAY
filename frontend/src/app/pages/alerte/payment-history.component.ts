@@ -3,7 +3,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AnalyticsService, PaymentHistoryItem } from '../../services/analytics';
-import { AuthService } from '../../services/auth';
+import { AuthService, AuthResponse } from '../../services/auth';
+import { PdfExportService } from '../../services/pdf-export';
 
 @Component({
   selector: 'app-payment-history',
@@ -16,10 +17,13 @@ export class PaymentHistoryComponent implements OnInit {
   payments: PaymentHistoryItem[] = [];
   loading = true;
   errorMessage = '';
+  exporting = false;
+  user: AuthResponse | null = null;
 
   constructor(
     private analyticsService: AnalyticsService,
     private authService: AuthService,
+    private pdfExport: PdfExportService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -29,6 +33,7 @@ export class PaymentHistoryComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+    this.authService.currentUser$.subscribe(u => (this.user = u));
     this.loadPaymentHistory();
 
     // Reload data when navigating back to this page
@@ -90,5 +95,19 @@ export class PaymentHistoryComponent implements OnInit {
       subscription: '📱',
       insurance: '🛡️'
     }[category];
+  }
+
+  exportPdf(): void {
+    if (this.payments.length === 0) return;
+    this.exporting = true;
+    setTimeout(() => {
+      try {
+        this.pdfExport.exportPaymentHistory(this.payments, this.user);
+      } catch (err) {
+        console.error('PDF generation failed:', err);
+      } finally {
+        this.exporting = false;
+      }
+    }, 50);
   }
 }

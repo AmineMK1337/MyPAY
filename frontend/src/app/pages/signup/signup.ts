@@ -25,6 +25,13 @@ export class SignupComponent {
     this.loading = true;
     this.errorMessage = '';
 
+    console.log('📤 Envoi de la requête d\'inscription:', {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      phone: this.phone
+    });
+
     this.authService.signup({
       firstName: this.firstName,
       lastName: this.lastName,
@@ -32,13 +39,30 @@ export class SignupComponent {
       password: this.password,
       phone: this.phone
     }).subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
+        console.log('✅ Inscription réussie:', response);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Erreur lors de l\'inscription';
+        console.error('❌ Erreur d\'inscription:', err);
+        console.error('Détails de l\'erreur:', {
+          status: err.status,
+          statusText: err.statusText,
+          error: err.error,
+          message: err.message
+        });
+        
+        if (err.status === 0) {
+          this.errorMessage = 'Impossible de se connecter au serveur. Vérifiez que le backend est démarré.';
+        } else if (err.status === 400) {
+          this.errorMessage = err.error?.message || 'Données invalides. Vérifiez tous les champs.';
+        } else if (err.status === 409 || err.error?.message?.includes('already exists')) {
+          this.errorMessage = 'Cet email est déjà utilisé.';
+        } else {
+          this.errorMessage = err.error?.message || err.message || 'Erreur lors de l\'inscription';
+        }
       }
     });
   }

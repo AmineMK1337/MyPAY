@@ -18,5 +18,9 @@ spring:
 # JWT Configuration
 app:
   jwt:
-    secret: MyPaySuperSecretKeyForJWTTokenGeneration2026SecureEnough256Bits!!
-    expiration-ms: 86400000  # 24 hours
+    secret: ${JWT_SECRET:MyPayDevOnlySecretKeyForLocalDevelopment2026SecureEnough256Bits!!}
+    expiration-ms: ${JWT_EXPIRATION:86400000}  # 24 hours
+
+# CORS Configuration  
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:4200}

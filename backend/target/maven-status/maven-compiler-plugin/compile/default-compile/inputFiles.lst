@@ -1,4 +1,5 @@
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\config\SecurityConfig.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\controller\AnalyticsController.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\controller\AuthController.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\controller\ContractController.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\controller\PaymentController.java
@@ -6,10 +7,15 @@ C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\AuthResponse.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\ContractResponse.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\CreateContractRequest.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\ExpenseCategoryDTO.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\LoginRequest.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\MonthlyAnalyticsDTO.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\MonthlyTrendDTO.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\OnlinePaymentRequest.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\OnlinePaymentResponse.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\PaymentHistoryDTO.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\dto\SignupRequest.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\exception\GlobalExceptionHandler.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\model\Contract.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\model\Payment.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\model\User.java
@@ -20,6 +26,7 @@ C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\security\CustomUserDetailsService.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\security\JwtAuthenticationFilter.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\security\JwtUtils.java
+C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\service\AnalyticsService.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\service\AuthService.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\service\ContractService.java
 C:\Users\Speeker\OneDrive - SUPCOM\Desktop\MyPAY\backend\src\main\java\com\mypay\service\PaymentService.java
