@@ -1,0 +1,177 @@
+<div class="profile-page">
+
+  <!-- Header -->
+  <div class="profile-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-icon">←</span>
+    </button>
+    <h1>Mon Profil</h1>
+    <button class="btn btn-logout" (click)="logout()">Déconnexion</button>
+  </div>
+
+  <div class="profile-container">
+
+    <!-- Avatar Card -->
+    <div class="avatar-card">
+      <div class="avatar-circle">{{ getInitials() }}</div>
+      <div class="avatar-info">
+        <h2 class="avatar-name">{{ user?.firstName }} {{ user?.lastName }}</h2>
+        <p class="avatar-email">{{ user?.email }}</p>
+        <span class="role-badge" *ngFor="let role of user?.roles">
+          {{ role.replace('ROLE_', '') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="successMessage">
+      ✓ {{ successMessage }}
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="setTab('profile')">
+        👤 Informations
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'settings'" (click)="setTab('settings')">
+        ⚙️ Paramètres
+      </button>
+    </div>
+
+    <!-- ── PROFILE TAB ── -->
+    <div *ngIf="activeTab === 'profile'" class="tab-content">
+
+      <div class="section-card">
+        <div class="section-card-header">
+          <h3>Informations personnelles</h3>
+          <button class="btn btn-edit" *ngIf="!editMode" (click)="enableEdit()">✏️ Modifier</button>
+        </div>
+
+        <div class="info-grid">
+          <!-- First Name -->
+          <div class="info-field">
+            <label>Prénom</label>
+            <input *ngIf="editMode" type="text" [(ngModel)]="firstName" name="firstName" />
+            <span *ngIf="!editMode" class="info-value">{{ user?.firstName }}</span>
+          </div>
+
+          <!-- Last Name -->
+          <div class="info-field">
+            <label>Nom</label>
+            <input *ngIf="editMode" type="text" [(ngModel)]="lastName" name="lastName" />
+            <span *ngIf="!editMode" class="info-value">{{ user?.lastName }}</span>
+          </div>
+
+          <!-- Email -->
+          <div class="info-field full-width">
+            <label>Adresse e-mail</label>
+            <input *ngIf="editMode" type="email" [(ngModel)]="email" name="email" />
+            <span *ngIf="!editMode" class="info-value">{{ user?.email }}</span>
+          </div>
+
+          <!-- Phone -->
+          <div class="info-field full-width">
+            <label>Téléphone</label>
+            <input *ngIf="editMode" type="tel" [(ngModel)]="phone" name="phone" placeholder="e.g., +216 20 000 000" />
+            <span *ngIf="!editMode" class="info-value muted">{{ phone || 'Non renseigné' }}</span>
+          </div>
+        </div>
+
+        <div class="edit-actions" *ngIf="editMode">
+          <button class="btn btn-primary" (click)="saveProfile()">✓ Enregistrer</button>
+          <button class="btn btn-cancel" (click)="cancelEdit()">Annuler</button>
+        </div>
+      </div>
+
+      <!-- Account Info (read-only) -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h3>Informations du compte</h3>
+        </div>
+        <div class="info-grid">
+          <div class="info-field full-width">
+            <label>Identifiant</label>
+            <span class="info-value mono">{{ user?.id }}</span>
+          </div>
+          <div class="info-field full-width">
+            <label>Rôles</label>
+            <div class="roles-list">
+              <span class="role-tag" *ngFor="let role of user?.roles">
+                {{ role.replace('ROLE_', '') }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── SETTINGS TAB ── -->
+    <div *ngIf="activeTab === 'settings'" class="tab-content">
+
+      <!-- Notifications -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h3>🔔 Notifications</h3>
+        </div>
+        <div class="toggle-list">
+          <label class="toggle-item">
+            <div class="toggle-label">
+              <span class="toggle-title">Rappel avant échéance</span>
+              <span class="toggle-desc">Recevoir une alerte avant la date d'échéance de chaque contrat</span>
+            </div>
+            <input type="checkbox" class="toggle-input" [(ngModel)]="notifyBeforeDue" name="notifyBeforeDue" />
+            <span class="toggle-slider"></span>
+          </label>
+          <label class="toggle-item">
+            <div class="toggle-label">
+              <span class="toggle-title">Confirmation de paiement</span>
+              <span class="toggle-desc">Être notifié après chaque paiement effectué</span>
+            </div>
+            <input type="checkbox" class="toggle-input" [(ngModel)]="notifyOnPayment" name="notifyOnPayment" />
+            <span class="toggle-slider"></span>
+          </label>
+          <label class="toggle-item">
+            <div class="toggle-label">
+              <span class="toggle-title">Alertes de retard</span>
+              <span class="toggle-desc">Recevoir une alerte en cas de retard de paiement</span>
+            </div>
+            <input type="checkbox" class="toggle-input" [(ngModel)]="notifyAlerts" name="notifyAlerts" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h3>🌐 Préférences</h3>
+        </div>
+        <div class="info-grid">
+          <div class="info-field">
+            <label>Langue</label>
+            <select [(ngModel)]="language" name="language">
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </select>
+          </div>
+          <div class="info-field">
+            <label>Devise</label>
+            <select [(ngModel)]="currency" name="currency">
+              <option value="TND">TND – Dinar Tunisien</option>
+              <option value="EUR">EUR – Euro</option>
+              <option value="USD">USD – Dollar</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-settings">
+        <button class="btn btn-primary" (click)="saveSettings()">💾 Enregistrer les paramètres</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

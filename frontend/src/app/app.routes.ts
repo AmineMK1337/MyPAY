@@ -5,6 +5,7 @@ import { SignupComponent } from './pages/signup/signup';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { AddContractComponent } from './pages/add-contract/add-contract';
 import { PaymentComponent } from './pages/payment/payment';
+import { ProfileComponent } from './pages/profile/profile';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -13,5 +14,6 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'add-contract', component: AddContractComponent },
   { path: 'payment', component: PaymentComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '**', redirectTo: '' }
 ];

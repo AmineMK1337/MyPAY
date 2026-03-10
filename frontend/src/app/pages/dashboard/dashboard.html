@@ -6,6 +6,7 @@
     </div>
     <div class="dash-nav-right">
       <span class="welcome" *ngIf="user">Bonjour, {{ user.firstName }} 👋</span>
+      <button class="btn btn-profile" routerLink="/profile" title="Mon profil">👤</button>
       <button class="btn btn-outline-sm" (click)="logout()">Déconnexion</button>
     </div>
   </nav>

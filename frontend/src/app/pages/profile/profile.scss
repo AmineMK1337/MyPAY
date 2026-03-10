@@ -1,0 +1,463 @@
+$primary: #4F46E5;
+$primary-light: #818CF8;
+$accent: #06B6D4;
+$bg-dark: #0F172A;
+$bg-card: #1E293B;
+$text-white: #d1e8ff;
+$text-gray: #94A3B8;
+$border-color: rgba(255, 255, 255, 0.06);
+$input-bg: #1E293B;
+
+:host {
+  display: block;
+  background: $bg-dark;
+  color: $text-white;
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.profile-page {
+  background: $bg-dark;
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+/* ── Header ── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba($bg-card, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  h1 {
+    flex: 1;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: $text-white;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($primary, 0.15);
+    color: $primary-light;
+  }
+}
+
+.back-icon {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* ── Container ── */
+.profile-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Avatar Card ── */
+.avatar-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, rgba($primary, 0.18), rgba($accent, 0.08));
+  border: 1px solid rgba($primary-light, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+}
+
+.avatar-circle {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary, $accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 20px rgba($primary, 0.4);
+}
+
+.avatar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.avatar-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: $text-white;
+}
+
+.avatar-email {
+  font-size: 0.85rem;
+  color: $text-gray;
+  margin: 0;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-top: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  background: rgba($primary, 0.2);
+  border: 1px solid rgba($primary-light, 0.3);
+  color: $primary-light;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Success Message ── */
+.success-message {
+  background: rgba(16, 185, 129, 0.12);
+  border-left: 4px solid #10b981;
+  color: #6ee7b7;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba($bg-card, 0.5);
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 0.35rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: $text-gray;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.active {
+    background: $primary;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba($primary, 0.4);
+  }
+
+  &:not(.active):hover {
+    background: rgba($primary, 0.1);
+    color: $text-white;
+  }
+}
+
+/* ── Tab Content ── */
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Section Card ── */
+.section-card {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    color: $text-white;
+  }
+}
+
+/* ── Info Grid ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input,
+  select {
+    height: 2.6rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    background: rgba($primary, 0.05);
+    border: 1.5px solid rgba($primary, 0.2);
+    color: $text-white;
+    font-size: 0.92rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    appearance: none;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-light;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23818CF8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.1em 1.1em;
+    padding-right: 2.5rem;
+  }
+}
+
+.info-value {
+  font-size: 0.93rem;
+  color: $text-white;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid $border-color;
+
+  &.muted { color: $text-gray; }
+  &.mono { font-family: 'Courier New', monospace; font-size: 0.82rem; color: $text-gray; }
+}
+
+.roles-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+}
+
+.role-tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: rgba($accent, 0.15);
+  border: 1px solid rgba($accent, 0.3);
+  color: $accent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Edit Actions ── */
+.edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+/* ── Toggle List ── */
+.toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba($primary, 0.12);
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  position: relative;
+  border-bottom: 1px solid rgba($primary, 0.08);
+  transition: background 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba($primary, 0.07);
+  }
+}
+
+.toggle-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.toggle-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-white;
+}
+
+.toggle-desc {
+  font-size: 0.78rem;
+  color: $text-gray;
+}
+
+/* Hide native checkbox, show custom slider */
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 2.6rem;
+  height: 1.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: $text-gray;
+    transition: all 0.2s ease;
+  }
+}
+
+.toggle-input:checked + .toggle-slider {
+  background: $primary;
+
+  &::after {
+    transform: translateX(1.2rem);
+    background: #fff;
+  }
+}
+
+/* ── Save Settings Button ── */
+.save-settings {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: $primary;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba($primary, 0.35);
+
+  &:hover {
+    background: darken($primary, 6%);
+    box-shadow: 0 4px 16px rgba($primary, 0.5);
+  }
+}
+
+.btn-edit {
+  background: transparent;
+  border: 1.5px solid rgba($primary-light, 0.4);
+  color: $primary-light;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+
+  &:hover {
+    background: rgba($primary, 0.1);
+  }
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: $text-gray;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-white;
+  }
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
