@@ -129,6 +129,7 @@ export class PaymentComponent implements OnInit {
       next: response => {
         this.successMessage = `Paiement confirme (${response.maskedCard})`;
         this.persistPaymentLocally(response.paymentId, paidAmount);
+        this.persistLastPaymentFlag(response.paymentId, paidAmount);
         this.form.cardNumber = '';
         this.form.expiry = '';
         this.form.cvc = '';
@@ -233,16 +234,39 @@ export class PaymentComponent implements OnInit {
   private persistPaymentLocally(paymentId: string, amount: number): void {
     const cacheKey = 'mypay_payments_cache';
     const raw = localStorage.getItem(cacheKey);
-    const current = raw ? (JSON.parse(raw) as Array<{ id: string; amount: number; status: string; paymentDate: string }>) : [];
+    let current: Array<{ id: string; amount: number; status: string; paymentDate: string; createdAt?: string }> = [];
 
-    const withoutSameId = Array.isArray(current) ? current.filter(item => item.id !== paymentId) : [];
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        current = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        current = [];
+      }
+    }
+
+    const stableId = paymentId || `PAY-${Date.now()}`;
+    const withoutSameId = current.filter(item => item.id !== stableId);
+    const nowIso = new Date().toISOString();
     withoutSameId.push({
-      id: paymentId,
-      amount,
+      id: stableId,
+      amount: Number(amount || 0),
       status: 'SUCCESS',
-      paymentDate: new Date().toISOString(),
+      paymentDate: nowIso,
+      createdAt: nowIso,
     });
 
     localStorage.setItem(cacheKey, JSON.stringify(withoutSameId));
+  }
+
+  private persistLastPaymentFlag(paymentId: string, amount: number): void {
+    const flagKey = 'mypay_last_payment';
+    const payload = {
+      id: paymentId || `PAY-${Date.now()}`,
+      amount: Number(amount || 0),
+      status: 'SUCCESS',
+      paymentDate: new Date().toISOString(),
+    };
+    localStorage.setItem(flagKey, JSON.stringify(payload));
   }
 }

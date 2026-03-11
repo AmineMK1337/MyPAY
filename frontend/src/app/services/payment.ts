@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, timeout } from 'rxjs/operators';
 import { AuthService } from './auth';
 import { ContractService } from './contract';
 
@@ -38,6 +38,11 @@ export interface PaymentRecord {
   paymentMethod: string;
   paymentDate: string;
   createdAt: string;
+}
+
+export interface PaymentSummary {
+  successCount: number;
+  monthTotal: number;
 }
 
 interface ApiResponse<T> {
@@ -105,6 +110,7 @@ export class PaymentService {
         headers: this.getHeaders(),
       })
       .pipe(
+        timeout({ first: 3500 }),
         map(resp => {
           if (!resp.success) {
             throw new Error(resp.message || 'Unable to load payments');
@@ -112,6 +118,23 @@ export class PaymentService {
           return Array.isArray(resp.data) ? resp.data : [];
         }),
         catchError(() => of([]))
+      );
+  }
+
+  getMyPaymentSummary(): Observable<PaymentSummary | null> {
+    return this.http
+      .get<ApiResponse<PaymentSummary>>(`${this.paymentApiUrl}/summary`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        timeout({ first: 3500 }),
+        map(resp => {
+          if (!resp.success || !resp.data) {
+            return null;
+          }
+          return resp.data;
+        }),
+        catchError(() => of(null))
       );
   }
 }

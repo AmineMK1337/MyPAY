@@ -2,6 +2,7 @@ package com.mypay.service;
 
 import com.mypay.dto.OnlinePaymentRequest;
 import com.mypay.dto.OnlinePaymentResponse;
+import com.mypay.dto.PaymentSummaryResponse;
 import com.mypay.model.Contract;
 import com.mypay.model.Payment;
 import com.mypay.repository.ContractRepository;
@@ -9,6 +10,7 @@ import com.mypay.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -52,6 +54,25 @@ public class PaymentService {
 
     public List<Payment> getPaymentsByUser(String userId) {
         return paymentRepository.findByUserId(userId);
+    }
+
+    public PaymentSummaryResponse getPaymentSummary(String userId) {
+        List<Payment> successful = paymentRepository.findByUserIdAndStatus(userId, "SUCCESS");
+        int successCount = successful.size();
+
+        YearMonth current = YearMonth.now();
+        double monthTotal = successful.stream()
+                .filter(payment -> {
+                    LocalDateTime when = payment.getPaymentDate() != null ? payment.getPaymentDate() : payment.getCreatedAt();
+                    if (when == null) {
+                        return false;
+                    }
+                    return when.getYear() == current.getYear() && when.getMonthValue() == current.getMonthValue();
+                })
+                .mapToDouble(Payment::getAmount)
+                .sum();
+
+        return new PaymentSummaryResponse(successCount, monthTotal);
     }
 
     private void validateRequest(OnlinePaymentRequest request) {

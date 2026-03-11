@@ -3,6 +3,7 @@ package com.mypay.controller;
 import com.mypay.dto.ApiResponse;
 import com.mypay.dto.OnlinePaymentRequest;
 import com.mypay.dto.OnlinePaymentResponse;
+import com.mypay.dto.PaymentSummaryResponse;
 import com.mypay.model.Payment;
 import com.mypay.repository.UserRepository;
 import com.mypay.security.JwtUtils;
@@ -46,6 +47,17 @@ public class PaymentController {
             String userId = getUserIdFromToken(token);
             List<Payment> payments = paymentService.getPaymentsByUser(userId);
             return ResponseEntity.ok(new ApiResponse(true, "Payments retrieved successfully", payments));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse> getMyPaymentSummary(@RequestHeader("Authorization") String token) {
+        try {
+            String userId = getUserIdFromToken(token);
+            PaymentSummaryResponse summary = paymentService.getPaymentSummary(userId);
+            return ResponseEntity.ok(new ApiResponse(true, "Payment summary retrieved successfully", summary));
         } catch (Exception e) {
             return ResponseEntity.status(400).body(new ApiResponse(false, e.getMessage()));
         }

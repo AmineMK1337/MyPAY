@@ -125,10 +125,20 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPaymentsCount(): void {
-    this.paymentService.getMyPayments().subscribe(apiPayments => {
-      const merged = this.mergePaymentsWithLocalCache(apiPayments);
-      this.paymentCount = merged.filter(payment => payment.status === 'SUCCESS').length;
-      this.monthlyExpense = this.calculateCurrentMonthExpense(merged);
+    this.applyLastPaymentToCache();
+
+    // Immediate UI update from local cache (works even if backend is slow/unavailable).
+    const cached = this.getCachedPayments();
+    this.paymentCount = cached.filter(payment => payment.status === 'SUCCESS').length;
+    this.monthlyExpense = this.calculateCurrentMonthExpense(cached);
+
+    // Source of truth: backend summary (DB-backed).
+    this.paymentService.getMyPaymentSummary().subscribe(summary => {
+      if (!summary) {
+        return;
+      }
+      this.paymentCount = Number(summary.successCount || 0);
+      this.monthlyExpense = Number(summary.monthTotal || 0);
     });
   }
 
@@ -196,9 +206,76 @@ export class DashboardComponent implements OnInit {
 
     try {
       const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? (parsed as PaymentRecord[]) : [];
+      if (!Array.isArray(parsed)) {
+        localStorage.removeItem(this.paymentsCacheKey);
+        return [];
+      }
+
+      // Accept older/partial shapes from local cache.
+      return parsed
+        .map((item: any) => {
+          const id = String(item?.id ?? item?.paymentId ?? '');
+          if (!id) {
+            return null;
+          }
+
+          return {
+            id,
+            userId: String(item?.userId ?? ''),
+            contractId: String(item?.contractId ?? ''),
+            amount: Number(item?.amount ?? 0),
+            status: String(item?.status ?? ''),
+            paymentMethod: String(item?.paymentMethod ?? ''),
+            paymentDate: item?.paymentDate,
+            createdAt: item?.createdAt,
+          } as PaymentRecord;
+        })
+        .filter(Boolean) as PaymentRecord[];
     } catch {
+      localStorage.removeItem(this.paymentsCacheKey);
       return [];
+    }
+  }
+
+  private applyLastPaymentToCache(): void {
+    const flagKey = 'mypay_last_payment';
+    const raw = localStorage.getItem(flagKey);
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const last = JSON.parse(raw) as { id?: string; amount?: number; status?: string; paymentDate?: string };
+      const id = String(last?.id ?? '');
+      if (!id) {
+        localStorage.removeItem(flagKey);
+        return;
+      }
+
+      const existing = this.getCachedPayments();
+      const already = existing.some(payment => payment.id === id);
+      if (!already) {
+        const updated = [
+          ...existing,
+          {
+            id,
+            userId: '',
+            contractId: '',
+            amount: Number(last?.amount ?? 0),
+            status: String(last?.status ?? 'SUCCESS'),
+            paymentMethod: 'CARD',
+            paymentDate: last?.paymentDate ?? new Date().toISOString(),
+            createdAt: last?.paymentDate ?? new Date().toISOString(),
+          } as PaymentRecord,
+        ];
+
+        localStorage.setItem(this.paymentsCacheKey, JSON.stringify(updated));
+      }
+
+      // One-time apply to avoid double counting.
+      localStorage.removeItem(flagKey);
+    } catch {
+      localStorage.removeItem(flagKey);
     }
   }
 
@@ -210,12 +287,52 @@ export class DashboardComponent implements OnInit {
     return payments
       .filter(payment => payment.status === 'SUCCESS')
       .filter(payment => {
-        const paymentDate = new Date(payment.paymentDate || payment.createdAt);
-        return !Number.isNaN(paymentDate.getTime()) &&
+        const paymentDate = this.parsePaymentDate(payment.paymentDate ?? payment.createdAt);
+        return (
+          !!paymentDate &&
           paymentDate.getFullYear() === year &&
-          paymentDate.getMonth() === month;
+          paymentDate.getMonth() === month
+        );
       })
       .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+  }
+
+  private parsePaymentDate(value: unknown): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    // Handle LocalDateTime serialized as array (e.g. [2026,3,11,14,30,0,0]).
+    if (Array.isArray(value) && value.length >= 3) {
+      const [year, month, day, hour = 0, minute = 0, second = 0] = value as number[];
+      const date = new Date(year, (month ?? 1) - 1, day ?? 1, hour ?? 0, minute ?? 0, second ?? 0);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    // Handle LocalDateTime serialized as object (e.g. {year,monthValue,dayOfMonth,...}).
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      const year = Number(obj['year']);
+      const month = Number(obj['monthValue'] ?? obj['month']);
+      const day = Number(obj['dayOfMonth'] ?? obj['day']);
+      const hour = Number(obj['hour'] ?? 0);
+      const minute = Number(obj['minute'] ?? 0);
+      const second = Number(obj['second'] ?? 0);
+
+      if ([year, month, day].some(n => Number.isNaN(n))) {
+        return null;
+      }
+
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    return null;
   }
 
   private restoreCachedContracts(): void {
